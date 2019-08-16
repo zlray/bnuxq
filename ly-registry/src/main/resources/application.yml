@@ -1,0 +1,17 @@
+server:
+  port: 8761
+
+eureka:
+  instance:
+    hostname: registry-server  #eureka服务端的实例名称
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/  #设置与Eureka server交互的地址查询服务和注册服务都需依赖这个地址
+#      defaultZone: http://registry-server:8761/eureka/
+    fetch-registry: false
+    register-with-eureka: false
+
+
+spring:
+  application:
+    name: eurka-server

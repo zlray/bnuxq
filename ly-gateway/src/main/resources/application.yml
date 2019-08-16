@@ -1,0 +1,43 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: api-gateway
+
+eureka:
+  client: #客户端注册到服务列表中
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+zuul:
+  prefix: /api
+  routes:
+    item-service: /item/**
+    user-service: /user/**
+    auth-service: /auth/**
+    upload-service:
+      path: /upload/**
+      serviceId: upload-service
+      strip-prefix: false
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000 #熔断超时时长
+
+
+ribbon:
+  ConnectTimeout: 1000 #ribbon链接超时时长
+  ReadTimeout: 3500 #ribbon读取超时时长
+  maxAutoRetries: 0 #当前服务重试次数
+  maxAutoRetriesNextServer: 0 #切换服务重试次数
+#  MaxAutoRetriesNextServer: 0  配置为o 则不必满足下面条件
+#  查看 AbstractRibbonCommand类
+#  maxAutoRetries 默认是0   maxAutoRetriesNextServer 默认是1
+#  ribbonTimeout = (ribbonReadTimeout + ribbonConnectTimeout)
+#                 * (maxAutoRetries + 1)
+#                 * (maxAutoRetriesNextServer + 1) < timeoutInMilliseconds
